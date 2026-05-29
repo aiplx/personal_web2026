@@ -1,0 +1,16 @@
+---
+const year = new Date().getFullYear();
+
+interface Props {
+  lang?: "zh" | "en";
+}
+
+const { lang = "en" } = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>{lang === "en" ? "Technical notes, lab setup, and small project records." : "技术笔记、实验准备和小项目记录。"}</span>
+    <span>{year}</span>
+  </div>
+</footer>

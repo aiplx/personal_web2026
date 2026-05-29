@@ -1,0 +1,44 @@
+---
+title: "Embedded Hardware Test Bench"
+titleEn: "Python-based hardware test automation for electronics and telecom-adjacent roles"
+summary: "用 Python、Raspberry Pi 或 ESP32 搭建自动测试台，执行 GPIO/I2C/UART/ADC 功能测试，记录数据并生成 pass/fail 报告。"
+summaryEn: "A Python-based test bench that automates GPIO, I2C, UART, and ADC checks, logs measurements, and generates pass/fail reports."
+status: "planned"
+priority: 3
+date: 2026-08-01
+track: "Hardware Test"
+tools: ["Python", "pytest", "Raspberry Pi", "ESP32", "SQLite"]
+targetRoles: ["Hardware Test Co-op", "Electronics Technician", "Embedded Systems Co-op", "RF/Telecom Support"]
+cities: ["Ottawa", "Kanata", "Toronto", "Montreal"]
+outcomes: ["Automated tests", "Measurement log", "Pass/fail report", "Fault injection notes"]
+featured: true
+public: false
+---
+
+## Goal
+
+This project connects programming practice with technician work: measurement, repeatability, fault isolation, and reporting.
+
+## Test Bench Concept
+
+The test runner connects to a small device under test and verifies basic hardware functions:
+
+- GPIO output state.
+- I2C sensor response.
+- UART communication.
+- ADC reading within expected range.
+- Fault condition when a sensor is disconnected.
+
+## Deliverables
+
+| Deliverable | Why it matters |
+| --- | --- |
+| `pytest` test suite | Shows repeatable test automation |
+| CSV/SQLite logs | Shows traceable measurement history |
+| HTML report | Shows pass/fail communication |
+| Wiring diagram | Shows hardware clarity |
+| Fault injection record | Shows troubleshooting thinking |
+
+## Resume Angle
+
+Built an embedded hardware test bench using Python and microcontroller-based devices to automate functional checks, log measurements, identify failures, and generate pass/fail reports.

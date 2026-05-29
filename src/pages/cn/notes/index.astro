@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHead from "@/components/SectionHead.astro";
+import NoteCard from "@/components/NoteCard.astro";
+
+const notes = (await getCollection("notes"))
+  .filter((note) => note.data.public)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="笔记 | Ping Liang EET 学习记录" lang="zh">
+  <section class="container article-head" style="padding-top: 52px;">
+    <span class="eyebrow">笔记</span>
+    <h1>小技术记录。</h1>
+    <p class="lead">整理工具安装、实验准备和学习中遇到的小问题。</p>
+  </section>
+  <section class="band paper">
+    <div class="container">
+      <SectionHead kicker="全部笔记" title="排错记录" text="每篇记录保留问题、有效的改动，以及后续需要补充的细节。" />
+      <div class="grid two">
+        {notes.map((note) => <NoteCard note={note} lang="zh" />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,41 @@
+---
+title: "Building Automation / Energy Monitoring Dashboard"
+titleEn: "BAS-style monitoring prototype for facilities and data center roles"
+summary: "模拟商业楼层或 server room 的温湿度、设备状态、能耗趋势和报警记录，训练 BAS technician 的读点位、看趋势、写维护建议能力。"
+summaryEn: "A BAS-style prototype that tracks temperature, humidity, equipment status, energy trends, and alarms for facilities and data center technician roles."
+status: "planned"
+priority: 2
+date: 2026-06-15
+track: "BAS"
+tools: ["Node-RED", "MQTT", "Grafana", "SQLite", "ESP32"]
+targetRoles: ["BAS Technician", "Facilities Technician", "Data Center Technician", "Building Systems Co-op"]
+cities: ["Toronto", "Ottawa", "Montreal"]
+outcomes: ["Trend log", "Alarm history", "Device list", "Energy report", "Maintenance recommendation"]
+featured: true
+public: false
+---
+
+## Purpose
+
+Toronto/GTA 和 Ottawa 都能看到 BAS、facilities、data center、building systems 相关岗位。这个项目把“楼宇系统排查”做成可展示的记录：不是只看 dashboard，而是能解释点位、趋势、报警和维护建议。
+
+## Planned System
+
+| Component | Evidence |
+| --- | --- |
+| Sensor data | Temperature, humidity, door state, equipment status, simulated current |
+| Dashboard | Live values, trend history, alarm panel, equipment run-time |
+| Rules | Over-temperature alarm, missing sensor data, maintenance reminder |
+| Report | Weekly energy summary and corrective-action note |
+| Diagrams | Device list, simple floor plan, network diagram |
+
+## Why It Fits My Path
+
+BAS work sits between electrical knowledge, controls thinking, and practical documentation. It is a strong match for technician co-op roles because it shows I can read signals, observe trends, and convert alarms into maintenance action.
+
+## Completion Criteria
+
+- One live dashboard.
+- One realistic fault scenario.
+- One maintenance report.
+- Screenshots and a 90-second walkthrough video.

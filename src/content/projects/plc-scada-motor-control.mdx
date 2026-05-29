@@ -1,0 +1,51 @@
+---
+title: "PLC / SCADA / Motor Control Mini Cell"
+titleEn: "Low-voltage controls demo"
+summary: "一个低压安全版控制系统项目，用来展示 PLC 逻辑、HMI、联锁、报警、故障复位、I/O list 和 commissioning 文档。"
+summaryEn: "A low-voltage controls demo showing PLC logic, HMI screens, interlocks, alarms, fault reset, I/O documentation, and commissioning notes."
+status: "building"
+priority: 1
+date: 2026-05-29
+track: "Controls"
+tools: ["OpenPLC", "Node-RED", "ESP32", "Modbus TCP", "QElectroTech"]
+targetRoles: ["Controls Technician", "Electrical Technician Co-op", "Commissioning Technician", "Field Service Technician"]
+cities: ["Ottawa", "Kanata", "Toronto", "Montreal"]
+outcomes: ["I/O list", "Wiring diagram", "HMI dashboard", "Fault log", "Commissioning checklist"]
+featured: true
+public: false
+---
+
+## Why This Project Exists
+
+这个项目用 24V DC 或模拟输入做一个小型控制练习，避免市电风险，同时练习控制系统里常见的逻辑：启动、停止、联锁、报警、复位、手动/自动模式。
+
+## System Scenario
+
+The demo cell simulates a small pump or conveyor station:
+
+| Area | Planned output |
+| --- | --- |
+| Inputs | Start, Stop, Emergency Stop, level switch, limit switch, fault input |
+| Outputs | Motor relay simulator, indicator lights, buzzer, HMI status |
+| Logic | Auto mode, manual mode, interlock, fault latch, reset sequence |
+| Communication | Modbus TCP between PLC runtime and dashboard |
+| Documentation | I/O list, wiring diagram, ladder screenshots, test procedure |
+
+## Minimum Viable Build
+
+1. OpenPLC project with start/stop and fault latch logic.
+2. Node-RED HMI showing mode, output state, alarm state, and reset button.
+3. QElectroTech wiring diagram for the low-voltage control circuit.
+4. A commissioning checklist with expected state for each input and output.
+5. A short demo video explaining one normal run and one fault condition.
+
+## What This Practices
+
+This project practices a practical troubleshooting process: define I/O, wire safely, test one signal at a time, verify logic, record failures, and write a clean handoff note.
+
+## Next Additions
+
+- Add a simulated VFD status signal.
+- Add alarm history export.
+- Add a fault mode table for sensor failure, motor overload, and communication loss.
+- Add a short English technical report.

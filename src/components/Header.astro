@@ -1,0 +1,53 @@
+---
+import { profile } from "@/data/site";
+import { withBase } from "@/lib/paths";
+
+interface Props {
+  lang?: "zh" | "en";
+}
+
+const { lang = "en" } = Astro.props;
+const isEn = lang === "en";
+const deployBase = import.meta.env.BASE_URL.replace(/\/$/, "");
+let currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+if (deployBase && currentPath.startsWith(deployBase)) {
+  currentPath = currentPath.slice(deployBase.length) || "/";
+}
+
+const pathWithoutLang = currentPath.startsWith("/cn")
+  ? currentPath.replace(/^\/cn/, "") || "/"
+  : currentPath.startsWith("/en")
+    ? currentPath.replace(/^\/en/, "") || "/"
+    : currentPath;
+
+const sectionBase = isEn ? "" : "cn";
+const homeHref = withBase(isEn ? "/" : "/cn");
+const projectsHref = withBase(sectionBase ? `/${sectionBase}/projects` : "/projects");
+const notesHref = withBase(sectionBase ? `/${sectionBase}/notes` : "/notes");
+const aboutHref = withBase(sectionBase ? `/${sectionBase}/about` : "/about");
+const enHref = withBase(pathWithoutLang === "/" ? "/" : pathWithoutLang);
+const cnHref = withBase(pathWithoutLang === "/" ? "/cn" : `/cn${pathWithoutLang}`);
+---
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href={homeHref}>
+      <strong>Ping Liang</strong>
+      <span>{isEn ? "EET notes" : "EET 学习记录"}</span>
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href={projectsHref}>{isEn ? "Projects" : "项目"}</a>
+      <a href={notesHref}>{isEn ? "Notes" : "笔记"}</a>
+      <a href={aboutHref}>{isEn ? "About" : "关于"}</a>
+      <label class="language-switch" aria-label="Language switch">
+        <select
+          class="language-select"
+          onchange="window.location.href=this.value"
+        >
+          <option value={enHref} selected={isEn}>EN</option>
+          <option value={cnHref} selected={!isEn}>CN</option>
+        </select>
+      </label>
+    </nav>
+  </div>
+</header>

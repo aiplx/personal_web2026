@@ -1,0 +1,40 @@
+---
+interface Props {
+  note: {
+    slug: string;
+    data: {
+      title: string;
+      titleEn: string;
+      summary: string;
+      category: string;
+      tools: string[];
+      tags: string[];
+      result: string;
+      resultEn?: string;
+    };
+  };
+  lang?: "zh" | "en";
+}
+
+import { withBase } from "@/lib/paths";
+
+const { note, lang = "zh" } = Astro.props;
+const isEn = lang === "en";
+const href = isEn
+  ? withBase(`/notes/${note.slug}`)
+  : withBase(`/cn/notes/${note.slug}`);
+---
+
+<article class="card">
+  <div class="card-header">
+    <span class="tag green">{note.data.category}</span>
+    <span class="card-code">NOTE</span>
+  </div>
+  <h3>{isEn ? note.data.titleEn : note.data.title}</h3>
+  <p>{isEn ? note.data.summaryEn : note.data.summary}</p>
+  <p class="result-line"><strong>{isEn ? "Result" : "结果"}:</strong> {isEn ? (note.data.resultEn ?? note.data.result) : note.data.result}</p>
+  <div class="meta">
+    {note.data.tools.slice(0, 4).map((tool) => <span class="tag">{tool}</span>)}
+  </div>
+  <a class="card-link" href={href}>{isEn ? "Read note" : "阅读记录"}</a>
+</article>

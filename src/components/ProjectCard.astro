@@ -1,0 +1,45 @@
+---
+interface Props {
+  project: {
+    slug: string;
+    data: {
+      title: string;
+      titleEn: string;
+      summary: string;
+      status: string;
+      track: string;
+      tools: string[];
+      targetRoles: string[];
+      cities: string[];
+    };
+  };
+  lang?: "zh" | "en";
+}
+
+import { withBase } from "@/lib/paths";
+
+const { project, lang = "zh" } = Astro.props;
+const isEn = lang === "en";
+const href = isEn
+  ? withBase(`/projects/${project.slug}`)
+  : withBase(`/cn/projects/${project.slug}`);
+const statusLabel = {
+  planned: "Planned",
+  building: "Building",
+  ready: "Ready",
+}[project.data.status] ?? project.data.status;
+---
+
+<article class="card">
+  <span class="tag green">{project.data.track}</span>
+  <h3>{isEn ? project.data.titleEn : project.data.title}</h3>
+  <p>{isEn ? project.data.summaryEn : project.data.summary}</p>
+  <div class="meta">
+    <span class="tag blue">{statusLabel}</span>
+    {project.data.cities.slice(0, 3).map((city) => <span class="tag">{city}</span>)}
+  </div>
+  <div class="meta">
+    {project.data.tools.slice(0, 4).map((tool) => <span class="tag">{tool}</span>)}
+  </div>
+  <a class="card-link" href={href}>{isEn ? "Open project file" : "打开项目记录"}</a>
+</article>

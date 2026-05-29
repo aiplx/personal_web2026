@@ -1,0 +1,116 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHead from "@/components/SectionHead.astro";
+import NoteCard from "@/components/NoteCard.astro";
+import { capabilityTracks, profile } from "@/data/site";
+import { withBase } from "@/lib/paths";
+
+const notes = (await getCollection("notes"))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((note) => note.data.public && note.data.featured);
+---
+
+<BaseLayout title="Ping Liang | EET 学习记录" lang="zh">
+  <section class="container hero">
+    <div>
+      <span class="eyebrow">渥太华 / Electrical Engineering Technician</span>
+      <h1>电气学习笔记、实验准备和项目线索。</h1>
+      <p class="lead">{profile.headlineZh}</p>
+      <div class="hero-actions">
+        <a class="button primary" href={withBase("/cn/notes")}>看笔记</a>
+        <a class="button" href={withBase("/cn/projects")}>项目架</a>
+      </div>
+      <div class="status-strip">
+        <div class="status-item">
+          <span>项目</span>
+          <strong>{profile.program}</strong>
+        </div>
+        <div class="status-item">
+          <span>当前</span>
+          <strong>实验与课程记录</strong>
+        </div>
+        <div class="status-item">
+          <span>关注</span>
+          <strong>仿真、安装、排错</strong>
+        </div>
+      </div>
+    </div>
+    <aside class="notebook-panel" aria-label="Notebook snapshot">
+      <div class="panel-topline">
+        <span class="kicker">记录架</span>
+        <span class="panel-id">EET-26S</span>
+      </div>
+      <div class="trace-board" aria-hidden="true">
+        <span class="trace trace-a"></span>
+        <span class="trace trace-b"></span>
+        <span class="node n1"></span>
+        <span class="node n2"></span>
+        <span class="node n3"></span>
+        <span class="meter">24V</span>
+      </div>
+      <dl>
+        <div>
+          <dt>当前笔记</dt>
+          <dd>Multisim M2 / ARM 安装</dd>
+        </div>
+        <div>
+          <dt>后续记录</dt>
+          <dd>课程设置、截图、实验小问题</dd>
+        </div>
+        <div>
+          <dt>项目线索</dt>
+          <dd>控制、楼宇系统、硬件测试、电力基础</dd>
+        </div>
+      </dl>
+    </aside>
+  </section>
+
+  <section class="band paper">
+    <div class="container">
+      <SectionHead
+        kicker="用途"
+        title="一个技术记录本"
+        text="这里用来整理电气实验、软件设置、课程准备和项目线索。内容会随着学习慢慢增加。"
+      />
+      <div class="grid">
+        {capabilityTracks.map((track) => (
+          <article class="card">
+            <span class="tag green">{track.labelZh}</span>
+            <h3>{track.labelZh}</h3>
+            <p>{track.textZh}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container">
+      <SectionHead
+        kicker="笔记"
+        title="安装与排错"
+        text="记录实验工具、仿真软件、虚拟机和课程准备中遇到的小问题。"
+      />
+      <div class="grid two">
+        {notes.map((note) => <NoteCard note={note} lang="zh" />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="band paper">
+    <div class="container">
+      <SectionHead
+        kicker="下一步"
+        title="项目线索"
+        text="这里先保留一点空间，给以后逐渐成形的图、测试、实验问题和小项目。"
+      />
+      <div class="plain-panel mist-panel">
+        <p>
+          有些项目会先从碎片开始：一张图、一次失败安装、一个测量结果、一个实验问题。
+          等它们足够清楚，再整理成可以留下来的记录。
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

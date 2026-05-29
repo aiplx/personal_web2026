@@ -1,0 +1,116 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHead from "@/components/SectionHead.astro";
+import NoteCard from "@/components/NoteCard.astro";
+import { capabilityTracks, profile } from "@/data/site";
+import { withBase } from "@/lib/paths";
+
+const notes = (await getCollection("notes"))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((note) => note.data.public && note.data.featured);
+---
+
+<BaseLayout title="Ping Liang | EET Notes and Projects" lang="en">
+  <section class="container hero">
+    <div>
+      <span class="eyebrow">Ottawa / Electrical Engineering Technician</span>
+      <h1>Electrical notes, lab setup, and project ideas.</h1>
+      <p class="lead">{profile.headline}</p>
+      <div class="hero-actions">
+        <a class="button primary" href={withBase("/en/notes")}>Read notes</a>
+        <a class="button" href={withBase("/en/projects")}>Project shelf</a>
+      </div>
+      <div class="status-strip">
+        <div class="status-item">
+          <span>Program</span>
+          <strong>{profile.program}</strong>
+        </div>
+        <div class="status-item">
+          <span>Now</span>
+          <strong>Labs and course notes</strong>
+        </div>
+        <div class="status-item">
+          <span>Focus</span>
+          <strong>Simulation, setup, troubleshooting</strong>
+        </div>
+      </div>
+    </div>
+    <aside class="notebook-panel" aria-label="Notebook snapshot">
+      <div class="panel-topline">
+        <span class="kicker">Log shelf</span>
+        <span class="panel-id">EET-26S</span>
+      </div>
+      <div class="trace-board" aria-hidden="true">
+        <span class="trace trace-a"></span>
+        <span class="trace trace-b"></span>
+        <span class="node n1"></span>
+        <span class="node n2"></span>
+        <span class="node n3"></span>
+        <span class="meter">24V</span>
+      </div>
+      <dl>
+        <div>
+          <dt>Current note</dt>
+          <dd>Multisim on Mac M2 / ARM</dd>
+        </div>
+        <div>
+          <dt>Next notes</dt>
+          <dd>course setup, screenshots, lab fixes</dd>
+        </div>
+        <div>
+          <dt>Project areas</dt>
+          <dd>controls, building systems, hardware test, power basics</dd>
+        </div>
+      </dl>
+    </aside>
+  </section>
+
+  <section class="band paper">
+    <div class="container">
+      <SectionHead
+        kicker="Use"
+        title="A place for technical notes"
+        text="I use this site to keep small records from electrical labs, software setup, course preparation, and project fragments."
+      />
+      <div class="grid">
+        {capabilityTracks.map((track) => (
+          <article class="card">
+            <span class="tag green">{track.label}</span>
+            <h3>{track.label}</h3>
+            <p>{track.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container">
+      <SectionHead
+        kicker="Notes"
+        title="Setup and troubleshooting"
+        text="Short notes on lab tools, simulation software, virtual machines, and course preparation."
+      />
+      <div class="grid two">
+        {notes.map((note) => <NoteCard note={note} lang="en" />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="band paper">
+    <div class="container">
+      <SectionHead
+        kicker="Next"
+        title="Project directions"
+        text="A quiet shelf for future builds, sketches, tests, and notes as they take shape."
+      />
+      <div class="plain-panel mist-panel">
+        <p>
+          Some project notes begin as fragments: a diagram, a failed install, a measurement, a lab question.
+          They will appear here when the shape is clear enough to keep.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

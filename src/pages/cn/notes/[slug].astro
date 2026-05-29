@@ -1,0 +1,33 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const notes = await getCollection("notes");
+  return notes
+    .filter((note) => note.data.public)
+    .map((note) => ({
+      params: { slug: note.slug },
+      props: { note },
+    }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+
+<BaseLayout title={`${note.data.title} | 笔记`} lang="zh">
+  <article class="article">
+    <header class="article-head">
+      <span class="eyebrow">{note.data.category}</span>
+      <h1>{note.data.title}</h1>
+      <p>{note.data.summary}</p>
+      <div class="meta">
+        {note.data.tools.map((tool) => <span class="tag">{tool}</span>)}
+      </div>
+    </header>
+    <div class="article-content">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
