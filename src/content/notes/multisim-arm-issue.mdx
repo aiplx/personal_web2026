@@ -1,16 +1,16 @@
 ---
-title: "在 Mac M2 + VMware Fusion + Windows ARM 上安装 Multisim 14.3 的坑和解决办法"
-titleEn: "Multisim 14.3 on Mac M2, VMware Fusion, and Windows ARM"
-summary: "AppsAnywhere 版在 Windows 11 ARM 虚拟机里报 0xc000007b；改用手动安装并精简可选组件后，Multisim 可以启动。"
-summaryEn: "AppsAnywhere Multisim failed with 0xc000007b on Windows 11 ARM. A trimmed manual NI install can launch, but school IT does not issue license keys."
+title: "Mac M2 + Windows ARM 虚拟机安装 Multisim 14.3 记录"
+titleEn: "Multisim 14.3 on a Mac M2 Windows ARM VM"
+summary: "AppsAnywhere 版在 VMware Fusion 的 Windows 11 ARM 虚拟机里报 0xc000007b；手动安装 NI Education 版并减少可选组件后，软件可以启动，但授权和长期使用仍要单独处理。"
+summaryEn: "AppsAnywhere Multisim failed with 0xc000007b inside a VMware Fusion Windows 11 ARM VM. A lean manual NI Education install launched, but licensing and long-term use still need a separate plan."
 date: 2026-05-29
 category: "Software Setup"
 tools: ["Multisim 14.3", "VMware Fusion", "Windows 11 ARM", "AppsAnywhere", "NI License Manager"]
 tags: ["Multisim", "虚拟机", "AppsAnywhere", "Mac", "Algonquin College"]
-problem: "Multisim 14.3 from AppsAnywhere showed services running but the app failed with 0xc000007b on Windows 11 ARM in VMware Fusion."
-solution: "Treat it as an ARM/x86 compatibility issue; try school Windows labs, Multisim Live, or a manual NI Education install with fewer optional components."
-result: "手动精简安装后可在 Windows ARM 虚拟机里启动；ITS 不提供许可证密钥，45 天试用后需另找方案。"
-resultEn: "A trimmed manual install launches on Windows ARM; ITS does not provide license keys, so plan beyond the 45-day trial."
+problem: "AppsAnywhere 显示 NI Multisim 14.3 正在运行，但主程序在 VMware Fusion 的 Windows 11 ARM 虚拟机里以 0xc000007b 失败。"
+solution: "先按 ARM/x86 兼容性问题处理；对课程作业来说，优先准备 Windows lab、Multisim Live 或手动 NI Education 安装这几条备选路径。"
+result: "手动安装并减少可选组件后，Multisim 可以在这台 Windows ARM 虚拟机里打开；但这不是官方支持方案，授权和稳定性仍然要留后路。"
+resultEn: "After a manual install with fewer optional components, Multisim opened on this Windows ARM VM. It is still not an official support path, so licensing and stability need a backup plan."
 featured: true
 ---
 
@@ -18,38 +18,45 @@ import { withBase } from "@/lib/paths";
 
 <div class="lang-zh">
 
-在阿尔冈昆学院的 BYOD 计划下，学生需要在自己的电脑上运行 NI Multisim 进行课程实验。我使用的是一台 **MacBook Pro M2**，通过 **VMware Fusion** 运行 **Windows 11 ARM** 虚拟机。当我从学校提供的 **AppsAnywhere** 平台安装并启动 Multisim 14.3 时，软件的后台服务虽然显示运行中，但主程序启动时弹出 **0xc000007b** 错误，无法进入界面：
+这是一篇安装记录，不是官方教程。我的环境比较特殊：**MacBook Pro M2**，用 **VMware Fusion** 跑 **Windows 11 ARM**，再通过学校的 **AppsAnywhere** 启动 **NI Multisim 14.3**。AppsAnywhere 里 Multisim 的状态显示为 `Running`，但真正打开主程序时直接报错：
 
-<img src={withBase("/notes/multisim-arm-issue/multisim-error.png")} alt="Multisim 启动错误 0xc000007b" />
+<figure>
+  <img src={withBase("/notes/multisim-arm-issue/multisim-error.png")} alt="AppsAnywhere 中 Multisim 显示 Running，但启动时报 0xc000007b" />
+  <figcaption>AppsAnywhere 显示服务正在运行，但 Multisim 主程序没有启动成功。</figcaption>
+</figure>
 
-## 错误分析：架构不兼容
+## 我的判断
 
-这个错误并非许可证问题，而是 **架构兼容性问题**。苹果自研芯片上的 VMware Fusion 只能运行 ARM 架构的 Windows 虚拟机，而 Multisim 14.3 是传统 x86/x64 Windows 桌面应用，它依赖的 DLL 在 ARM 版 Windows 下需要转译，往往会因为缺少或无法加载 32/64 位库而崩溃。VMware 官方也说明 Apple Silicon 上只能运行 ARM guest OS，而 NI 目前提供的 Multisim 安装包只有 Windows x86/x64 版本。
+我一开始怀疑过许可证，但这个现象更像 **Windows ARM 兼容性问题**。Apple Silicon 上的 VMware Fusion 跑的是 ARM 版 Windows，而 Multisim 14.3 是传统 Windows 桌面软件。它可以被安装，不代表所有依赖都能在 ARM 转译层里正常加载。`0xc000007b` 本身也常见于 32/64 位库、运行库或 DLL 加载不匹配。
 
-## 常见尝试及建议
+所以我后面没有继续把时间全部花在 AppsAnywhere 上，而是把问题拆成两件事：
 
-我在尝试解决过程中整理了几条建议：
+<ul class="check-list">
+  <li>先确认有没有能交作业的替代环境：学校 Windows 电脑、远程 lab、同学或自己的 Intel/AMD Windows 电脑。</li>
+  <li>再尝试能不能在这台 ARM 虚拟机里找到一个临时可用的安装方式。</li>
+</ul>
 
-- **不要在 VMware Fusion 里反复折腾** —— 服务显示 “Running” 不代表主程序兼容，ARM 转译常常会导致报错。
-- **优先使用学校的 Windows 电脑/远程实验室** —— Multisim 在传统 Intel/AMD 版 Windows 10/11 上最稳定。
-- **尝试 Parallels Desktop** —— Parallels 对 Windows 11 ARM 的 x86 应用兼容性通常比 VMware 好一些，但仍不能保证 Multisim 正常运行。
-- **安装必要运行库** —— 尝试安装 VC++ 2015–2022 运行库（x86/64）、.NET 3.5/4.x、运行 NI Package Manager 的 Repair 和安装 Circuit Design Suite 14.3 补丁；这些都是低成本操作，但如果依旧报错，那基本就是 ARM 转译的限制。
-- **使用 Multisim Live** —— NI 提供的浏览器版在线电路仿真工具，适合基础实验，不需要安装软件；如果课程不强制提交 `.ms14` 文件，这是最快捷的替代方案。
-- **了解 BYOD 政策** —— 阿尔冈昆学院的 BYOD 页面实际上不建议使用 Mac：有些课程在高年级会依赖 Windows-only 应用。如果你的专业必须使用 Windows 软件，官方建议使用 Windows 电脑。
+## 试过的路
 
-## 手动安装的折中方案
+低成本的修复包括安装 VC++ 2015-2022 运行库、检查 .NET、用 NI Package Manager 做 repair、重启虚拟机。这些步骤值得试，但在我这里没有解决 AppsAnywhere 版的启动错误。
 
-由于我的课程需要提交 Multisim 桌面版的实验文件，我尝试绕过 AppsAnywhere 的预安装包，直接从 NI 官网下载 **Multisim 14.3 Education** 安装程序。这一版本在安装过程中提供了可选组件。我在安装时取消勾选了 `Offline Help` 以及另外一个额外的 `.NET` 相关模块，避免了安装过多的依赖。安装完成后，在同样的 Windows 11 ARM 虚拟机里竟然可以正常启动：
+真正有变化的是手动安装。我绕过 AppsAnywhere，直接从 NI 官网下载 **Multisim 14.3 Education** 安装程序。安装时我没有全选组件，而是取消了 `Offline Help` 和一个额外的 `.NET` 相关模块。这样装完以后，同一台 Windows 11 ARM 虚拟机里 Multisim 能打开：
 
-<img src={withBase("/notes/multisim-arm-issue/success-to-run.png")} alt="Multisim 在 Windows ARM 虚拟机中成功运行" />
+<figure>
+  <img src={withBase("/notes/multisim-arm-issue/success-to-run.png")} alt="Multisim 在 Windows 11 ARM 虚拟机中成功打开" />
+  <figcaption>手动安装后的 Multisim 可以进入主界面。右侧系统信息能看到这是 ARM-based processor。</figcaption>
+</figure>
 
-通过 **NI License Manager** 可以查看授权状态：
+授权状态可以在 **NI License Manager** 里看：
 
-<img src={withBase("/notes/multisim-arm-issue/license-manager.png")} alt="License Manager 显示已经授权" />
+<figure>
+  <img src={withBase("/notes/multisim-arm-issue/license-manager.png")} alt="NI License Manager 中 Multisim 14.3 和 Ultiboard 14.3 显示 Licensed" />
+  <figcaption>License Manager 里显示 Multisim 14.3 / Ultiboard 14.3 目前可用。</figcaption>
+</figure>
 
-左侧 Multisim 14.3 和 Ultiboard 14.3 旁边显示绿色圆点并标注 “Licensed”，右侧 “Schematic capture and simulation” 也为绿色，这意味着软件已经处于被授权的状态，而不是试用或未激活。如果仍然是试用版，License Manager 会显示 “Evaluation” 或 “Trial”。
+这里我会谨慎看待 `Licensed` 这个状态：它说明软件当前能用，但不等于学校一定给了永久密钥。NI 官网 Education 版本身有试用期，所以后续仍要确认 trial、license server 或学校授权到底是哪一种。
 
-需要说明的是，从 NI 官网下载的 Education 版默认是 **45 天免费试用**。我发邮件问过学校 IT 能否提供 Multisim 序列号，以下是 **ITS Client Care** 的回复要点：
+我发邮件问过学校 IT 能不能提供 Multisim 序列号。**ITS Client Care** 的回复要点是：
 
 > ITS does not provide Multisim license keys.
 >
@@ -57,55 +64,66 @@ import { withBase } from "@/lib/paths";
 >
 > You can visit us in person at Student Central and we can provide you our "Best Effort" to attempt to repair AppsAnywhere. We will most likely uninstall it from your Windows VM and double check the configuration settings during installation.
 
-归纳一下：**向 IT 申请许可证密钥这条路走不通**；BYOD 政策层面 Mac 不被允许；高年级课程可能还有更多 Windows 专用软件；如果仍想用 AppsAnywhere，可以去 Student Central 当面求助，IT 会尽力重装并检查安装配置，但不保证能修好 ARM 虚拟机上的兼容问题。试用期满后就只能换其他方案。
+这封回复把边界说清楚了：IT 不提供 Multisim license key；BYOD 要求里 Mac 不被允许；如果还想修 AppsAnywhere，可以去 Student Central 让他们做 best-effort 检查，但这不等于 ARM 虚拟机一定能跑。
 
-## 总结与建议
+## 我会怎么处理
 
-- **Mac 上没有官方 Multisim、Linux 版也没有**，只有 Windows 桌面版。所以在 Apple Silicon 上使用 Multisim 时一定要考虑兼容性。
-- 如果只是完成基础实验，可以直接使用 **Multisim Live** 或 **Falstad/CircuitJS** 这类免费的在线仿真工具；它们不需要安装，可在浏览器运行。
-- 如果必须提交 `.ms14` 文件，而又只能用 Mac，那么可以尝试：
-  1. **手动安装** NI 官网版 Multisim，取消可选组件，使其在 Windows ARM 上凑合运行（注意 45 天试用限制）；
-  2. **使用学校 Windows 电脑或实验室**；
-  3. **自备 Intel/AMD Windows 电脑** 完成实验；
-  4. **去 Student Central** 请 IT 尝试重装 AppsAnywhere（Best Effort，不保证成功）。
-- 最终，这个折中方案虽然让 Multisim 在我的 Windows 11 ARM 虚拟机上跑起来了，但不保证所有功能都稳定，且 BYOD 政策仍倾向于使用 Windows 电脑。因此，若有条件，还是建议在原生 Windows 环境中使用 Multisim。
+如果只是画基础电路，**Multisim Live**、Falstad / CircuitJS 这类网页版工具可以先顶上。但如果课程要求提交 `.ms14` 文件，还是要准备真正的 Windows 环境。
 
-本帖记录了在 Mac M2 上安装 Multisim 的过程，作为个人学习笔记留存。如果以后有新的兼容信息，我会继续更新这篇记录。
+我的当前方案是：
+
+<ol class="check-list">
+  <li>短期用手动安装版完成能完成的 lab，同时注意试用期。</li>
+  <li>遇到必须稳定提交的作业时，优先用学校 Windows 电脑或其他 Intel/AMD Windows 电脑。</li>
+  <li>如果 AppsAnywhere 仍必须使用，就去 Student Central 做一次现场检查。</li>
+  <li>以后买设备或准备高年级课程时，把 Windows-only 软件当作真实限制，不再只看“Mac 能不能虚拟化 Windows”。</li>
+</ol>
+
+这次的结论不是“Mac M2 不能跑 Multisim”，而是：**它可以被临时跑起来，但不适合作为唯一方案**。对课程来说，能按时提交比把虚拟机调到完美更重要。
 
 </div>
 
 <div class="lang-en">
 
-Under Algonquin College’s BYOD program, students need NI Multisim on their own machines for lab work. I use a **MacBook Pro M2** with **VMware Fusion** running **Windows 11 ARM**. After installing Multisim 14.3 from **AppsAnywhere**, background services showed as running, but the main app failed on launch with **0xc000007b** and never opened the UI:
+This is an install log, not an official guide. My setup was a **MacBook Pro M2**, **VMware Fusion**, **Windows 11 ARM**, and **NI Multisim 14.3** launched through the college **AppsAnywhere** portal. AppsAnywhere showed Multisim as `Running`, but the actual program failed before opening:
 
-<img src={withBase("/notes/multisim-arm-issue/multisim-error.png")} alt="Multisim launch error 0xc000007b" />
+<figure>
+  <img src={withBase("/notes/multisim-arm-issue/multisim-error.png")} alt="AppsAnywhere showing Multisim running while the app fails with 0xc000007b" />
+  <figcaption>AppsAnywhere showed the service as running, but the Multisim UI did not launch.</figcaption>
+</figure>
 
-## Root cause: architecture mismatch
+## My read of the error
 
-This was not a license issue. It was an **architecture compatibility** problem. VMware Fusion on Apple Silicon only runs ARM Windows guests, while Multisim 14.3 is a traditional x86/x64 Windows desktop app. Its DLLs are translated on ARM Windows and often fail when 32/64-bit libraries cannot load. VMware documents ARM-only guests on Apple Silicon, and NI still ships Multisim only for Windows x86/x64.
+At first I wondered if this was licensing. The behavior looked more like a **Windows ARM compatibility issue**. VMware Fusion on Apple Silicon runs the ARM build of Windows, while Multisim 14.3 is an older Windows desktop application. It can install, but that does not mean all of its dependencies load cleanly through the ARM translation layer. The `0xc000007b` error often points toward runtime, DLL, or 32/64-bit library mismatches.
 
-## What to try (and what to expect)
+I stopped treating AppsAnywhere as the only path and split the problem into two parts:
 
-- **Do not keep reinstalling inside VMware Fusion** — “Running” services do not mean the UI is compatible; ARM translation often still crashes.
-- **Prefer school Windows PCs or remote labs** — Multisim is most stable on Intel/AMD Windows 10/11.
-- **Parallels Desktop** — Often handles x86 apps on Windows 11 ARM better than VMware, but Multisim is still not guaranteed.
-- **Install runtimes** — VC++ 2015–2022 (x86/x64), .NET 3.5/4.x, NI Package Manager Repair, and Circuit Design Suite 14.3 patches are low-cost steps; if errors persist, you are likely hitting ARM translation limits.
-- **Multisim Live** — NI’s browser simulator works for basic labs and needs no install; if the course does not require `.ms14` files, it is the fastest workaround.
-- **Read BYOD policy** — Algonquin’s BYOD guidance discourages Macs for some programs because later terms rely on Windows-only tools. Official advice is to use a Windows PC when the program requires it.
+<ul class="check-list">
+  <li>Find a reliable way to finish course work: school Windows PCs, a remote lab, or an Intel/AMD Windows machine.</li>
+  <li>See whether this ARM VM could still be made useful as a temporary setup.</li>
+</ul>
 
-## Workaround: manual NI install
+## What changed
 
-My course requires desktop Multisim files, so I bypassed the AppsAnywhere bundle and downloaded **Multisim 14.3 Education** from NI. The installer exposes optional components. I unchecked `Offline Help` and an extra `.NET` module to reduce dependencies. On the same Windows 11 ARM VM, Multisim then launched:
+I tried the low-cost repairs first: VC++ 2015-2022 runtimes, .NET checks, NI Package Manager repair, and a VM restart. Those did not fix the AppsAnywhere launch error.
 
-<img src={withBase("/notes/multisim-arm-issue/success-to-run.png")} alt="Multisim running successfully in the Windows ARM VM" />
+The useful change was a manual install. I bypassed the AppsAnywhere bundle and downloaded **Multisim 14.3 Education** directly from NI. During installation, I did not select every optional component. I unchecked `Offline Help` and an extra `.NET`-related module. After that, Multisim opened on the same Windows 11 ARM VM:
 
-License status appears in **NI License Manager**:
+<figure>
+  <img src={withBase("/notes/multisim-arm-issue/success-to-run.png")} alt="Multisim opened successfully inside a Windows 11 ARM VM" />
+  <figcaption>Manual install result: Multisim opened. The Windows system panel also shows an ARM-based processor.</figcaption>
+</figure>
 
-<img src={withBase("/notes/multisim-arm-issue/license-manager.png")} alt="License Manager showing licensed products" />
+The current license state is visible in **NI License Manager**:
 
-Green dots beside Multisim 14.3 and Ultiboard 14.3 with “Licensed”, plus green “Schematic capture and simulation”, indicate activation rather than trial mode (“Evaluation” / “Trial” would show otherwise).
+<figure>
+  <img src={withBase("/notes/multisim-arm-issue/license-manager.png")} alt="NI License Manager showing Multisim 14.3 and Ultiboard 14.3 as licensed" />
+  <figcaption>License Manager showed Multisim 14.3 / Ultiboard 14.3 as currently usable.</figcaption>
+</figure>
 
-The Education download is a **45-day trial** by default. I emailed school IT asking for a Multisim license key. Here is the reply from **ITS Client Care**:
+I would be careful with the word `Licensed` here. It means the software is usable at the moment; it does not prove that the college has provided a permanent key. The NI Education download can also involve a trial period, so licensing still needs to be checked separately.
+
+I emailed school IT asking whether they could provide a Multisim serial number. **ITS Client Care** replied:
 
 > ITS does not provide Multisim license keys.
 >
@@ -113,19 +131,21 @@ The Education download is a **45-day trial** by default. I emailed school IT ask
 >
 > You can visit us in person at Student Central and we can provide you our "Best Effort" to attempt to repair AppsAnywhere. We will most likely uninstall it from your Windows VM and double check the configuration settings during installation.
 
-In short: **asking IT for a license key is not an option**; BYOD policy does not permit Macs; upper-level terms may add more Windows-only software; if you still want AppsAnywhere, visit Student Central in person and IT will try a “Best Effort” reinstall and config check — but that does not guarantee a fix on an ARM VM. Plan for what happens after the trial ends.
+That reply sets the boundary: IT does not provide Multisim license keys; the BYOD requirement does not allow Macs; and Student Central can only offer best-effort AppsAnywhere repair. That may still be worth doing, but it is not a guarantee that this ARM VM becomes a fully supported setup.
 
-## Summary
+## My practical plan
 
-- **No official Multisim for Mac or Linux** — only Windows desktop builds. Plan for compatibility on Apple Silicon.
-- For basic labs, **Multisim Live**, **Falstad**, or **CircuitJS** avoid installs entirely.
-- If you must submit `.ms14` files on a Mac:
-  1. **Manual NI install** with fewer optional components on Windows ARM (45-day trial applies);
-  2. **Use school Windows PCs or labs**;
-  3. **Use your own Intel/AMD Windows PC** when possible;
-  4. **Visit Student Central** and ask IT to reinstall AppsAnywhere (Best Effort, not guaranteed).
-- My workaround runs on Windows 11 ARM but is not guaranteed stable, and BYOD policy still favors native Windows. Use a real Windows environment when you can.
+For basic circuit work, **Multisim Live**, Falstad, or CircuitJS can be enough. For assignments that require `.ms14` files, I would not rely on the Mac VM as the only option.
 
-This note documents what I tried on Mac M2, kept here as a personal lab log. I will update this page if I find newer compatibility information.
+My plan from here:
+
+<ol class="check-list">
+  <li>Use the manual install for short-term lab work while the license state is valid.</li>
+  <li>Use a school Windows machine or another Intel/AMD Windows computer for anything that must be submitted reliably.</li>
+  <li>Visit Student Central if AppsAnywhere is required for a later course task.</li>
+  <li>Treat Windows-only software as a real program requirement when planning future devices or setups.</li>
+</ol>
+
+The lesson is not “Multisim cannot run on a Mac M2.” It can, at least in this case, be made to open. The lesson is that it is a fragile workaround, and it should not be the only plan for course work.
 
 </div>

@@ -686,6 +686,7 @@ h3 {
 .article-content {
   font-size: 1.02rem;
   line-height: 1.78;
+  overflow-wrap: break-word;
 }
 
 .article-content h2 {
@@ -704,6 +705,56 @@ h3 {
   padding-left: 22px;
 }
 
+.article-content .check-list {
+  display: grid;
+  gap: 10px;
+  padding-left: 0;
+  list-style: none;
+  counter-reset: item;
+}
+
+.article-content .check-list li {
+  position: relative;
+  margin: 0;
+  padding: 12px 14px 12px 42px;
+  border: 1px solid rgba(129, 119, 99, 0.3);
+  border-radius: 5px;
+  background: rgba(251, 250, 244, 0.58);
+}
+
+.article-content ul.check-list li::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 20px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 4px rgba(15, 106, 78, 0.1);
+}
+
+.article-content ol.check-list li {
+  counter-increment: item;
+}
+
+.article-content ol.check-list li::before {
+  content: counter(item);
+  position: absolute;
+  left: 13px;
+  top: 12px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(15, 106, 78, 0.42);
+  border-radius: 50%;
+  color: var(--green);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
 .article-content li {
   margin: 8px 0;
 }
@@ -712,6 +763,12 @@ h3 {
   background: rgba(31, 107, 75, 0.12);
   padding: 2px 5px;
   border-radius: 4px;
+  overflow-wrap: anywhere;
+}
+
+.article-content a,
+.article-content blockquote {
+  overflow-wrap: anywhere;
 }
 
 .article-content blockquote {
@@ -734,6 +791,23 @@ h3 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--paper);
+}
+
+.article-content figure {
+  margin: 28px 0;
+}
+
+.article-content figure img {
+  margin: 0;
+  box-shadow: 0 16px 44px rgba(32, 37, 32, 0.1);
+}
+
+.article-content figcaption {
+  max-width: 720px;
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
 }
 
 .article-content table {
