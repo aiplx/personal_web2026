@@ -28,6 +28,13 @@ const latestHref = latestNote
   lang={lang}
 >
   <section class="home-hero">
+    <img
+      class="hero-scene"
+      src={withBase("/notes/multisim-arm-issue/success-to-run.png")}
+      alt=""
+      aria-hidden="true"
+    />
+    <div class="hero-shade" aria-hidden="true"></div>
     <div class="container hero-grid">
       <div class="hero-copy">
         <p class="eyebrow light">Electrical / Ottawa</p>
@@ -51,22 +58,15 @@ const latestHref = latestNote
           </div>
         </dl>
       </div>
-
-      <figure class="hero-evidence">
-        <div class="evidence-image">
-          <img
-            src={withBase("/notes/multisim-arm-issue/success-to-run.png")}
-            alt={isEn
-              ? "Multisim running in a Windows 11 ARM virtual machine"
-              : "Multisim 在 Windows 11 ARM 虚拟机中运行"}
-          />
-          <span class="evidence-mark" aria-hidden="true">01</span>
-        </div>
-        <figcaption>
-          <span>{isEn ? "FIELD NOTE 01 / SOFTWARE SETUP" : "技术记录 01 / 软件安装"}</span>
+      <div class="hero-evidence" aria-label={isEn
+        ? "Featured field note: Multisim 14.3 on Windows ARM"
+        : "精选技术记录：Windows ARM 上的 Multisim 14.3"}>
+        <span class="evidence-mark" aria-hidden="true">01</span>
+        <div>
+          <span>{isEn ? "FIELD NOTE / SOFTWARE SETUP" : "技术记录 / 软件安装"}</span>
           <strong>{isEn ? "Multisim 14.3 on Windows ARM" : "Windows ARM 上的 Multisim 14.3"}</strong>
-        </figcaption>
-      </figure>
+        </div>
+      </div>
     </div>
   </section>
 

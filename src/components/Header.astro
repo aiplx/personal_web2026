@@ -49,15 +49,16 @@ const isActive = (section: string) => {
       )}
       <a href={notesHref} aria-current={isActive("notes") ? "page" : undefined}>{isEn ? "Notes" : "笔记"}</a>
       <a href={aboutHref} aria-current={isActive("about") ? "page" : undefined}>{isEn ? "About" : "关于"}</a>
-      <label class="language-switch" aria-label="Language switch">
-        <select
-          class="language-select"
-          onchange="window.location.href=this.value"
-        >
-          <option value={enHref} selected={isEn}>English</option>
-          <option value={cnHref} selected={!isEn}>中文</option>
-        </select>
-      </label>
+      <details class="language-menu">
+        <summary aria-label={isEn ? "Change language" : "切换语言"}>
+          <span>{isEn ? "EN" : "中文"}</span>
+          <span class="language-chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="language-options">
+          <a href={enHref} lang="en" aria-current={isEn ? "true" : undefined}>English</a>
+          <a href={cnHref} lang="zh-CN" aria-current={!isEn ? "true" : undefined}>中文</a>
+        </div>
+      </details>
     </nav>
   </div>
 </header>
