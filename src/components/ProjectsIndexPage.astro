@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+
+interface Props {
+  lang?: "zh" | "en";
+}
+
+const { lang = "en" } = Astro.props;
+const isEn = lang === "en";
+const projects = (await getCollection("projects"))
+  .filter((project) => project.data.public)
+  .sort((a, b) => a.data.priority - b.data.priority);
+---
+
+<BaseLayout title={isEn ? "Projects | Ping Liang" : "项目 | Ping Liang"} lang={lang}>
+  <section class="page-masthead">
+    <div class="container masthead-grid">
+      <p class="eyebrow light">{isEn ? "Projects" : "项目"}</p>
+      <div>
+        <h1>{isEn ? "Published work." : "已发布项目。"}</h1>
+        <p>{isEn ? "Completed builds with drawings, tests, and results." : "包含图纸、测试和结果的完整项目记录。"}</p>
+      </div>
+    </div>
+  </section>
+  <section class="archive-section">
+    <div class="container archive-grid">
+      <aside class="archive-label">
+        <span>{String(projects.length).padStart(2, "0")}</span>
+        <p>{isEn ? "published projects" : "个公开项目"}</p>
+      </aside>
+      {projects.length > 0 ? (
+        <div class="grid two">
+          {projects.map((project) => <ProjectCard project={project} lang={lang} />)}
+        </div>
+      ) : (
+        <div class="empty-state"><p>{isEn ? "No projects published." : "暂无公开项目。"}</p></div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

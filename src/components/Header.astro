@@ -1,5 +1,5 @@
 ---
-import { profile } from "@/data/site";
+import { getCollection } from "astro:content";
 import { withBase } from "@/lib/paths";
 
 interface Props {
@@ -27,25 +27,35 @@ const notesHref = withBase(sectionBase ? `/${sectionBase}/notes` : "/notes");
 const aboutHref = withBase(sectionBase ? `/${sectionBase}/about` : "/about");
 const enHref = withBase(pathWithoutLang === "/" ? "/" : pathWithoutLang);
 const cnHref = withBase(pathWithoutLang === "/" ? "/cn" : `/cn${pathWithoutLang}`);
+const hasPublicProjects = (await getCollection("projects")).some((project) => project.data.public);
+
+const isActive = (section: string) => {
+  const normalized = pathWithoutLang === "/" ? "/" : pathWithoutLang;
+  return normalized === `/${section}` || normalized.startsWith(`/${section}/`);
+};
 ---
 
 <header class="site-header">
   <div class="container nav">
     <a class="brand" href={homeHref}>
       <strong>Ping Liang</strong>
-      <span>{isEn ? "EET notes" : "EET 学习记录"}</span>
+      <span>{isEn ? "Electrical field notes" : "电气学习记录"}</span>
     </a>
     <nav class="nav-links" aria-label="Main navigation">
-      <a href={projectsHref}>{isEn ? "Projects" : "项目"}</a>
-      <a href={notesHref}>{isEn ? "Notes" : "笔记"}</a>
-      <a href={aboutHref}>{isEn ? "About" : "关于"}</a>
+      {hasPublicProjects && (
+        <a href={projectsHref} aria-current={isActive("projects") ? "page" : undefined}>
+          {isEn ? "Projects" : "项目"}
+        </a>
+      )}
+      <a href={notesHref} aria-current={isActive("notes") ? "page" : undefined}>{isEn ? "Notes" : "笔记"}</a>
+      <a href={aboutHref} aria-current={isActive("about") ? "page" : undefined}>{isEn ? "About" : "关于"}</a>
       <label class="language-switch" aria-label="Language switch">
         <select
           class="language-select"
           onchange="window.location.href=this.value"
         >
-          <option value={enHref} selected={isEn}>EN</option>
-          <option value={cnHref} selected={!isEn}>CN</option>
+          <option value={enHref} selected={isEn}>English</option>
+          <option value={cnHref} selected={!isEn}>中文</option>
         </select>
       </label>
     </nav>

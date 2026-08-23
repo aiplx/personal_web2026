@@ -6,7 +6,9 @@ interface Props {
       title: string;
       titleEn: string;
       summary: string;
+      summaryEn: string;
       category: string;
+      date: Date;
       tools: string[];
       tags: string[];
       result: string;
@@ -14,27 +16,45 @@ interface Props {
     };
   };
   lang?: "zh" | "en";
+  index?: number;
 }
 
 import { withBase } from "@/lib/paths";
 
-const { note, lang = "zh" } = Astro.props;
+const { note, lang = "zh", index = 1 } = Astro.props;
 const isEn = lang === "en";
 const href = isEn
   ? withBase(`/notes/${note.slug}`)
   : withBase(`/cn/notes/${note.slug}`);
+const date = new Intl.DateTimeFormat(isEn ? "en-CA" : "zh-CN", {
+  year: "numeric",
+  month: "short",
+  day: "2-digit",
+  timeZone: "UTC",
+}).format(note.data.date);
+const categoryZh: Record<string, string> = {
+  "Software Setup": "软件安装",
+  "Career Planning": "职业规划",
+};
+const category = isEn ? note.data.category : (categoryZh[note.data.category] ?? note.data.category);
 ---
 
-<article class="card">
-  <div class="card-header">
-    <span class="tag green">{note.data.category}</span>
-    <span class="card-code">NOTE</span>
+<article class="note-entry">
+  <div class="note-number">{String(index).padStart(2, "0")}</div>
+  <div class="note-main">
+    <div class="note-meta">
+      <span>{category}</span>
+      <time datetime={note.data.date.toISOString()}>{date}</time>
+    </div>
+    <h3><a href={href}>{isEn ? note.data.titleEn : note.data.title}</a></h3>
+    <p>{isEn ? note.data.summaryEn : note.data.summary}</p>
+    <div class="note-tools">
+      {note.data.tools.slice(0, 4).map((tool) => <span>{tool}</span>)}
+    </div>
   </div>
-  <h3>{isEn ? note.data.titleEn : note.data.title}</h3>
-  <p>{isEn ? note.data.summaryEn : note.data.summary}</p>
-  <p class="result-line"><strong>{isEn ? "Result" : "结果"}:</strong> {isEn ? (note.data.resultEn ?? note.data.result) : note.data.result}</p>
-  <div class="meta">
-    {note.data.tools.slice(0, 4).map((tool) => <span class="tag">{tool}</span>)}
+  <div class="note-result">
+    <span>{isEn ? "Outcome" : "结果"}</span>
+    <p>{isEn ? (note.data.resultEn ?? note.data.result) : note.data.result}</p>
+    <a class="text-link" href={href}>{isEn ? "Read note" : "阅读记录"}</a>
   </div>
-  <a class="card-link" href={href}>{isEn ? "Read note" : "阅读记录"}</a>
 </article>

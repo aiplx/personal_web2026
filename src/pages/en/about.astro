@@ -1,33 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import { profile } from "@/data/site";
+import AboutPage from "@/components/AboutPage.astro";
 ---
 
-<BaseLayout title="About | Ping Liang EET Notes" lang="en">
-  <section class="container article">
-    <span class="eyebrow">About</span>
-    <h1>Electrical studies, notes, and small builds.</h1>
-    <p class="lead">{profile.headline}</p>
-
-    <div class="article-content">
-      <h2>Why I Keep These Notes</h2>
-      <p>
-        Small setup problems are easy to forget after they are fixed. I use this site to write down what happened,
-        what changed, and what I would check first next time.
-      </p>
-
-      <h2>What I Write About</h2>
-      <ul>
-        <li>Software setup, lab preparation, and troubleshooting.</li>
-        <li>Course concepts with examples, diagrams, or screenshots.</li>
-        <li>Small project work around controls, building systems, hardware testing, and power basics.</li>
-      </ul>
-
-      <h2>Direction</h2>
-      <p>
-        I am interested in controls, building systems, electrical troubleshooting, and hardware testing.
-        Planned project notes connect those areas with course labs and small build exercises.
-      </p>
-    </div>
-  </section>
-</BaseLayout>
+<AboutPage lang="en" />

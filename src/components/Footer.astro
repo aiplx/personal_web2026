@@ -1,4 +1,6 @@
 ---
+import { withBase } from "@/lib/paths";
+
 const year = new Date().getFullYear();
 
 interface Props {
@@ -10,7 +12,7 @@ const { lang = "en" } = Astro.props;
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <span>{lang === "en" ? "Technical notes, lab setup, and small project records." : "技术笔记、实验准备和小项目记录。"}</span>
-    <span>{year}</span>
+    <a class="footer-name" href={withBase(lang === "en" ? "/" : "/cn")}>Ping Liang</a>
+    <span>{lang === "en" ? "Electrical field notes" : "电气学习记录"} / {year}</span>
   </div>
 </footer>

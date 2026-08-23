@@ -1,0 +1,43 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import NoteCard from "@/components/NoteCard.astro";
+
+interface Props {
+  lang?: "zh" | "en";
+}
+
+const { lang = "en" } = Astro.props;
+const isEn = lang === "en";
+const notes = (await getCollection("notes"))
+  .filter((note) => note.data.public)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title={isEn ? "Notes | Ping Liang" : "笔记 | Ping Liang"} lang={lang}>
+  <section class="page-masthead">
+    <div class="container masthead-grid">
+      <p class="eyebrow light">{isEn ? "Field notes" : "技术笔记"}</p>
+      <div>
+        <h1>{isEn ? "Problems, attempts, results." : "问题、尝试和结果。"}</h1>
+        <p>
+          {isEn
+            ? "Setup and troubleshooting records from electrical coursework and lab tools."
+            : "来自电气课程、实验工具和软件环境的安装与排错记录。"}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="archive-section">
+    <div class="container archive-grid">
+      <aside class="archive-label">
+        <span>{String(notes.length).padStart(2, "0")}</span>
+        <p>{isEn ? "published notes" : "篇公开记录"}</p>
+      </aside>
+      <div class="notes-list">
+        {notes.map((note, index) => <NoteCard note={note} lang={lang} index={index + 1} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

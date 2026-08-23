@@ -1,0 +1,115 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import NoteCard from "@/components/NoteCard.astro";
+import { withBase } from "@/lib/paths";
+
+interface Props {
+  lang?: "zh" | "en";
+}
+
+const { lang = "en" } = Astro.props;
+const isEn = lang === "en";
+const notes = (await getCollection("notes"))
+  .filter((note) => note.data.public && note.data.featured)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latestNote = notes[0];
+const notesHref = withBase(isEn ? "/notes" : "/cn/notes");
+const latestHref = latestNote
+  ? withBase(isEn ? `/notes/${latestNote.slug}` : `/cn/notes/${latestNote.slug}`)
+  : notesHref;
+---
+
+<BaseLayout
+  title={isEn ? "Ping Liang | Electrical field notes" : "Ping Liang | 电气学习记录"}
+  description={isEn
+    ? "Electrical Engineering Technician notes on lab setup, circuit simulation, and troubleshooting."
+    : "Electrical Engineering Technician 学习记录：实验准备、电路仿真与排错。"}
+  lang={lang}
+>
+  <section class="home-hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow light">Electrical / Ottawa</p>
+        <h1><span>Ping</span><span>Liang</span></h1>
+        <p class="hero-lead">
+          {isEn
+            ? "Electrical Engineering Technician student at Algonquin College. I keep notes on software setup, circuit simulation, and the fixes that make lab work repeatable."
+            : "我目前在 Algonquin College 就读 Electrical Engineering Technician 专业。这里记录软件安装、电路仿真和实验排错，把以后还会用到的步骤留下来。"}
+        </p>
+        <a class="text-link light-link" href={latestHref}>
+          {isEn ? "Open the latest note" : "阅读最新记录"}
+        </a>
+        <dl class="hero-facts">
+          <div>
+            <dt>{isEn ? "Program" : "专业"}</dt>
+            <dd>Electrical Engineering Technician</dd>
+          </div>
+          <div>
+            <dt>{isEn ? "Notebook" : "记录内容"}</dt>
+            <dd>{isEn ? "Setup · simulation · troubleshooting" : "安装 · 仿真 · 排错"}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <figure class="hero-evidence">
+        <div class="evidence-image">
+          <img
+            src={withBase("/notes/multisim-arm-issue/success-to-run.png")}
+            alt={isEn
+              ? "Multisim running in a Windows 11 ARM virtual machine"
+              : "Multisim 在 Windows 11 ARM 虚拟机中运行"}
+          />
+          <span class="evidence-mark" aria-hidden="true">01</span>
+        </div>
+        <figcaption>
+          <span>{isEn ? "FIELD NOTE 01 / SOFTWARE SETUP" : "技术记录 01 / 软件安装"}</span>
+          <strong>{isEn ? "Multisim 14.3 on Windows ARM" : "Windows ARM 上的 Multisim 14.3"}</strong>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="home-notes" id="latest-note">
+    <div class="container">
+      <header class="editorial-head">
+        <p class="eyebrow">{isEn ? "Latest entry" : "最新记录"}</p>
+        <h2>{isEn ? "Notes from the workbench." : "实验台上的记录。"}</h2>
+        <p>
+          {isEn
+            ? "The useful part of a fix is usually the detail you almost forgot to write down."
+            : "一个问题解决以后，最容易忘掉的往往正是下次最有用的细节。"}
+        </p>
+      </header>
+
+      <div class="notes-list">
+        {latestNote && <NoteCard note={latestNote} lang={lang} index={1} />}
+      </div>
+
+      <div class="section-action">
+        <a class="text-link" href={notesHref}>{isEn ? "Browse all notes" : "查看全部笔记"}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="notebook-scope">
+    <div class="container scope-grid">
+      <div>
+        <p class="eyebrow">{isEn ? "Notebook scope" : "记录范围"}</p>
+        <h2>{isEn ? "What gets recorded." : "记录什么。"}</h2>
+      </div>
+      <div class="scope-copy">
+        <p>
+          {isEn
+            ? "I write down setup choices, failed attempts, screenshots, measurements, and the steps that finally worked."
+            : "我会记下安装选择、失败尝试、截图、测量结果，以及最后真正有效的步骤。"}
+        </p>
+        <ol class="scope-index">
+          <li><span>01</span>{isEn ? "Lab and software setup" : "实验与软件安装"}</li>
+          <li><span>02</span>{isEn ? "Circuit simulation notes" : "电路仿真记录"}</li>
+          <li><span>03</span>{isEn ? "Troubleshooting decisions" : "排错过程与判断"}</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,31 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import { profile } from "@/data/site";
+import AboutPage from "@/components/AboutPage.astro";
 ---
 
-<BaseLayout title="关于 | Ping Liang EET 学习记录" lang="zh">
-  <section class="container article">
-    <span class="eyebrow">关于</span>
-    <h1>电气学习、笔记和小项目。</h1>
-    <p class="lead">{profile.headlineZh}</p>
-
-    <div class="article-content">
-      <h2>为什么记录</h2>
-      <p>
-        很多小问题解决之后很容易忘。这里记录发生了什么、改了什么、下次应该先检查哪里。
-      </p>
-
-      <h2>记录内容</h2>
-      <ul>
-        <li>软件安装、实验准备和排错。</li>
-        <li>课程概念、例子、图和截图。</li>
-        <li>控制、楼宇系统、硬件测试和电力基础相关的小项目。</li>
-      </ul>
-
-      <h2>方向</h2>
-      <p>
-        我对控制、楼宇系统、电气排错和硬件测试感兴趣。后面的项目记录会尽量和课程实验、小型搭建联系起来。
-      </p>
-    </div>
-  </section>
-</BaseLayout>
+<AboutPage lang="zh" />

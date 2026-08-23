@@ -1,8 +1,8 @@
 ---
 title: "Mac M2 + Windows ARM 虚拟机安装 Multisim 14.3 记录"
-titleEn: "Multisim 14.3 on a Mac M2 Windows ARM VM"
+titleEn: "Multisim 14.3 in a Windows 11 ARM VM on Mac M2"
 summary: "AppsAnywhere 版在 VMware Fusion 的 Windows 11 ARM 虚拟机里报 0xc000007b；手动安装 NI Education 版并减少可选组件后，软件可以启动，但授权和长期使用仍要单独处理。"
-summaryEn: "AppsAnywhere Multisim failed with 0xc000007b inside a VMware Fusion Windows 11 ARM VM. A lean manual NI Education install launched, but licensing and long-term use still need a separate plan."
+summaryEn: "AppsAnywhere failed with 0xc000007b in my Windows 11 ARM virtual machine. Installing Multisim directly from NI without a few optional components got it open, but licensing is still unresolved."
 date: 2026-05-29
 category: "Software Setup"
 tools: ["Multisim 14.3", "VMware Fusion", "Windows 11 ARM", "AppsAnywhere", "NI License Manager"]
@@ -79,7 +79,7 @@ import { withBase } from "@/lib/paths";
   <li>以后买设备或准备高年级课程时，把 Windows-only 软件当作真实限制，不再只看“Mac 能不能虚拟化 Windows”。</li>
 </ol>
 
-这次的结论不是“Mac M2 不能跑 Multisim”，而是：**它可以被临时跑起来，但不适合作为唯一方案**。对课程来说，能按时提交比把虚拟机调到完美更重要。
+这次 Multisim 确实在 Mac M2 上打开了，但这套办法比较脆弱。我不会把它当作课程作业的唯一环境。对课程来说，能按时提交比把虚拟机调到完美更重要。
 
 </div>
 
@@ -146,6 +146,6 @@ My plan from here:
   <li>Treat Windows-only software as a real program requirement when planning future devices or setups.</li>
 </ol>
 
-The lesson is not “Multisim cannot run on a Mac M2.” It can, at least in this case, be made to open. The lesson is that it is a fragile workaround, and it should not be the only plan for course work.
+In this case, Multisim did open on a Mac M2, but only through a fragile workaround. I would not use this as the only setup for course work.
 
 </div>

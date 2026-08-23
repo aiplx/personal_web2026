@@ -1,0 +1,74 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MultisimArmIssueContent from "@/components/MultisimArmIssueContent.astro";
+import { withBase } from "@/lib/paths";
+
+interface Props {
+  note: any;
+  lang?: "zh" | "en";
+}
+
+const { note, lang = "en" } = Astro.props;
+const isEn = lang === "en";
+const { Content } = await render(note);
+const date = new Intl.DateTimeFormat(isEn ? "en-CA" : "zh-CN", {
+  year: "numeric",
+  month: isEn ? "short" : "long",
+  day: "2-digit",
+  timeZone: "UTC",
+}).format(note.data.date);
+const categoryZh: Record<string, string> = {
+  "Software Setup": "软件安装",
+  "Career Planning": "职业规划",
+};
+const category = isEn ? note.data.category : (categoryZh[note.data.category] ?? note.data.category);
+const notesHref = withBase(isEn ? "/notes" : "/cn/notes");
+---
+
+<BaseLayout
+  title={`${isEn ? note.data.titleEn : note.data.title} | Ping Liang`}
+  description={isEn ? note.data.summaryEn : note.data.summary}
+  lang={lang}
+>
+  <article>
+    <header class="article-masthead">
+      <div class="container article-title-grid">
+        <div class="article-rail-head">
+          <a href={notesHref}>{isEn ? "Notes" : "笔记"}</a>
+          <span>/</span>
+          <span>{category}</span>
+        </div>
+        <div>
+          <h1>{isEn ? note.data.titleEn : note.data.title}</h1>
+          <p>{isEn ? note.data.summaryEn : note.data.summary}</p>
+          <div class="article-tools">
+            {note.data.tools.map((tool: string) => <span>{tool}</span>)}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container article-layout">
+      <aside class="article-rail">
+        <dl>
+          <div>
+            <dt>{isEn ? "Published" : "发布"}</dt>
+            <dd>{date}</dd>
+          </div>
+          <div>
+            <dt>{isEn ? "Type" : "类型"}</dt>
+            <dd>{category}</dd>
+          </div>
+          <div>
+            <dt>{isEn ? "Outcome" : "结果"}</dt>
+            <dd>{isEn ? (note.data.resultEn ?? note.data.result) : note.data.result}</dd>
+          </div>
+        </dl>
+      </aside>
+      <div class="article-content">
+        {note.slug === "multisim-arm-issue" ? <MultisimArmIssueContent lang={lang} /> : <Content />}
+      </div>
+    </div>
+  </article>
+</BaseLayout>

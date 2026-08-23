@@ -1,0 +1,57 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+interface Props {
+  lang?: "zh" | "en";
+}
+
+const { lang = "en" } = Astro.props;
+const isEn = lang === "en";
+---
+
+<BaseLayout title={isEn ? "About | Ping Liang" : "关于 | Ping Liang"} lang={lang}>
+  <section class="page-masthead about-masthead">
+    <div class="container masthead-grid">
+      <p class="eyebrow light">{isEn ? "About" : "关于"}</p>
+      <div>
+        <h1>{isEn ? "I keep records of problems I may meet twice." : "把以后可能再遇到的问题记下来。"}</h1>
+        <p>
+          {isEn
+            ? "I'm Ping Liang, an Electrical Engineering Technician student at Algonquin College in Ottawa."
+            : "我是 Ping Liang，目前在渥太华 Algonquin College 就读 Electrical Engineering Technician。"}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-body">
+    <div class="container about-grid">
+      <div class="about-intro">
+        <p class="eyebrow">{isEn ? "The notebook" : "这个网站"}</p>
+        <p class="large-copy">
+          {isEn
+            ? "It started as a place for the setup steps and screenshots that disappear once a lab finally works."
+            : "一开始只是想找个地方，留下那些实验终于跑通以后很快就会忘掉的设置步骤和截图。"}
+        </p>
+      </div>
+      <div class="about-details">
+        <section>
+          <h2>{isEn ? "What belongs here" : "这里记录什么"}</h2>
+          <p>
+            {isEn
+              ? "Lab software, Windows virtual machines, circuit simulation, and troubleshooting decisions. I include failed attempts when they explain why the final fix worked."
+              : "实验软件、Windows 虚拟机、电路仿真和排错判断。失败的尝试也会保留，只要它能解释最后为什么成功。"}
+          </p>
+        </section>
+        <section>
+          <h2>{isEn ? "What comes later" : "后续内容"}</h2>
+          <p>
+            {isEn
+              ? "When a course exercise becomes a complete build, its drawings, test steps, and measured results can be published here with the note that led to it."
+              : "当课程练习逐渐变成完整作品后，再把图纸、测试步骤和测量结果连同过程记录一起发布。"}
+          </p>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
